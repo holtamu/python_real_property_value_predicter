@@ -1,3 +1,5 @@
+## 1. 환경설정 및 데이터 수집
+
 import requests
 import pandas as pd
 import xml.etree.ElementTree as ET
@@ -40,7 +42,7 @@ def get_apartment_data(service_key, lawd_cd, deal_ymd):
 # --- 단독 실행 테스트용 ---
 if __name__ == "__main__":
     load_dotenv()
-    MY_KEY = os.getenv("DATA_API_KEY") # 파일에서 키를 몰래 읽어옴
+    MY_KEY = os.getenv("DATA_API_KEY") # .env 파일에서 키를 읽어옴
     # MY_KEY = "YOUR_API-KEY"
     REGION_CODE = "11545" # 금천구
     DATE = "202401"
