@@ -73,18 +73,51 @@ plt.show()
 loss, mae = model.evaluate(X_test_scaled, y_test, verbose=0)
 print(f"\n📊 모델 평가 결과 (MAE): 평균 약 {round(mae, 2)}만원 정도의 오차가 발생합니다.")
 
-# 10. [수정] 실제 예측 테스트
-# 예: 전용면적 84㎡, 아파트 나이 10년, 시흥동(세 번째 동네라고 가정) 아파트의 예상 가격은?
-# 원-핫 인코딩 순서에 맞춰서 데이터를 넣어줘야 합니다.
-# [면적, 나이, 법정동_가산동(0), 법정동_독산동(0), 법정동_시흥동(1)] 형태 예시:
-# *주의: 실제 데이터의 동네 순서에 따라 1의 위치가 달라질 수 있습니다.
+
+# 10. [수정] 사용자 입력형 실제 예측 테스트
+
+print("\n" + "="*50)
+print("🏠 금천구 아파트 가격 예측 시뮬레이터")
+print("="*50)
+
+# --- 1. 전용면적 선택 ---
+unique_areas = sorted(df['전용면적'].unique())
+print("\n[1] 전용면적을 선택하세요 (㎡):")
+for i, area in enumerate(unique_areas, 1):
+    print(f"{i}. {area}㎡")
+area_choice = int(input("번호 입력 >> ")) - 1
+input_area = unique_areas[area_choice]
+
+# --- 2. 아파트 나이 선택 ---
+unique_ages = sorted(df['아파트나이'].unique())
+print("\n[2] 아파트 나이(건축년도 기준)를 선택하세요:")
+for i, age in enumerate(unique_ages, 1):
+    print(f"{i}. {age}년")
+age_choice = int(input("번호 입력 >> ")) - 1
+input_age = unique_ages[age_choice]
+
+# --- 3. 법정동 선택 ---
+unique_dongs = sorted(df['법정동'].unique())
+print("\n[3] 법정동(동네)을 선택하세요:")
+for i, dong in enumerate(unique_dongs, 1):
+    print(f"{i}. {dong}")
+dong_choice = int(input("번호 입력 >> ")) - 1
+input_dong = unique_dongs[dong_choice]
+
+# --- 4. 데이터 변환 및 예측 ---
+# 원-핫 인코딩된 컬럼 순서에 맞춰서 0과 1의 리스트를 만듭니다.
 test_columns = df_encoded.filter(regex='전용면적|아파트나이|법정동_').columns
-print(f"\n입력 순서 확인: {list(test_columns)}")
+dong_features = [1 if f"법정동_{input_dong}" == col else 0 for col in test_columns if "법정동_" in col]
 
-# 시흥동(법정동_시흥동=1)을 가정하고 테스트 데이터를 만듭니다.
-# 보통 가산, 독산, 시흥 순이므로 0, 0, 1로 넣어봅니다.
-sample_data = np.array([[84, 10, 0, 0, 1]]) 
+# [면적, 나이, 가산동(0), 독산동(0), 시흥동(1) ...] 형태로 조합
+sample_data = np.array([[input_area, input_age] + dong_features])
 sample_scaled = scaler.transform(sample_data)
-prediction = model.predict(sample_scaled)
+prediction = model.predict(sample_scaled, verbose=0)
 
-print(f"🏠 예측 결과: {list(test_columns)} 조건의 예상가는 약 {round(prediction[0][0], 2)}만원입니다.")
+# --- 5. 최종 결과 출력 ---
+print("\n" + "결과 분석 중..." + "."*10)
+print(f"\n✅ 선택하신 조건:")
+print(f"📍 위치: {input_dong} | 면적: {input_area}㎡ | 나이: {input_age}년")
+print("-" * 50)
+print(f"💰 인공지능 예측 거래가: 약 {round(prediction[0][0], -1):,} 만원")
+print("="*50)
