@@ -123,6 +123,36 @@ print("-" * 50)
 print(f"💰 인공지능 예측 거래가: 약 {round(prediction[0][0], -1):,} 만원")
 print("="*50)
 
+# =========================================
+# --- [Figure_2.png] 실제값 vs AI 예측값 비교 그래프 ---
+print("\n📊 모델 성능 검증 그래프를 생성합니다...")
+
+# 테스트 데이터에 대한 예측 수행
+y_pred = model.predict(X_test_scaled, verbose=0).flatten()
+
+plt.figure(figsize=(8, 8))
+
+# 산점도: 실제값(x)과 예측값(y)
+plt.scatter(y_test, y_pred, alpha=0.5, color='royalblue', label='예측 데이터')
+
+# 완벽한 예측을 의미하는 대각선 (y=x)
+max_val = max(max(y_test), max(y_pred))
+min_val = min(min(y_test), min(y_pred))
+plt.plot([min_val, max_val], [min_val, max_val], color='red', linestyle='--', lw=2, label='Perfect Prediction')
+
+plt.title(f'실제 거래가 vs AI 예측가 비교\n(평균 오차: 약 {round(mae, 2)}만원)')
+plt.xlabel('실제 거래금액 (만원)')
+plt.ylabel('AI 예측 금액 (만원)')
+plt.legend()
+plt.grid(True, linestyle=':', alpha=0.6)
+
+plt.tight_layout()
+plt.savefig('Figure_2.png') # Figure_2로 저장
+plt.show()
+print("✅ Figure_2.png (성능 검증 그래프) 저장 완료")
+# =========================================
+
+
 # 11. Gemini 연동하기
 # gemini_analysis.py에서 함수 불러오기
 from gemini_analysis import get_gemini_report
