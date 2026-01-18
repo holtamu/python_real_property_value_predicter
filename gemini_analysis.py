@@ -7,7 +7,7 @@ load_dotenv()
 # 1. API 설정 (발급받은 키를 입력하세요)
 GOOGLE_API_KEY = os.getenv("YOUR_GEMINI_API_KEY") 
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-2.5-flash')
 
 def get_gemini_report(input_dong, input_area, input_age, predicted_price):
     """
@@ -43,5 +43,5 @@ def get_gemini_report(input_dong, input_area, input_age, predicted_price):
         return f"❌ Gemini 연동 중 오류가 발생했습니다: {e}"
 
 # (테스트용 실행 코드)
-report = get_gemini_report("시흥동", 84, 10, 55980)
-print(report)
+# report = get_gemini_report("시흥동", 84, 10, 55980)
+# print(report)

@@ -75,7 +75,7 @@ loss, mae = model.evaluate(X_test_scaled, y_test, verbose=0)
 print(f"\n📊 모델 평가 결과 (MAE): 평균 약 {round(mae, 2)}만원 정도의 오차가 발생합니다.")
 
 
-# 10. [수정] 사용자 입력형 실제 예측 테스트
+# 10. 사용자 입력형 실제 예측 테스트
 
 print("\n" + "="*50)
 print("🏠 금천구 아파트 가격 예측 시뮬레이터")
@@ -121,4 +121,18 @@ print(f"\n✅ 선택하신 조건:")
 print(f"📍 위치: {input_dong} | 면적: {input_area}㎡ | 나이: {input_age}년")
 print("-" * 50)
 print(f"💰 인공지능 예측 거래가: 약 {round(prediction[0][0], -1):,} 만원")
+print("="*50)
+
+# 11. Gemini 연동하기
+# gemini_analysis.py에서 함수 불러오기
+from gemini_analysis import get_gemini_report
+
+# 불러온 함수 실행
+report = get_gemini_report(input_dong, input_area, input_age, prediction.item())
+
+# 3. 결과 출력
+print("\n" + "="*50)
+print("🏠 Gemini 전문가 분석 리포트")
+print("-" * 50)
+print(report)
 print("="*50)
