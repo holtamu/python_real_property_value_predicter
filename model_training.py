@@ -156,9 +156,13 @@ print("✅ Figure_2.png (성능 검증 그래프) 저장 완료")
 # 11. Gemini 연동하기
 # gemini_analysis.py에서 함수 불러오기
 from gemini_analysis import get_gemini_report
+from save_image import save_text_as_image
 
 # 불러온 함수 실행
 report = get_gemini_report(input_dong, input_area, input_age, prediction.item())
+
+# 리포트 사진으로 저장
+save_text_as_image(report)
 
 # 3. 결과 출력
 print("\n" + "="*50)
